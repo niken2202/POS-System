@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,12 +12,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dao.AppUserRepository;
-import com.example.demo.model.AppUser;
+import com.example.demo.model.User;
 
 @Component
 @Service
-public class UserService  implements UserDetailsService {
-
+public class UserService implements UserDetailsService{
 	@Autowired
 	private AppUserRepository repository;
 
@@ -29,21 +27,20 @@ public class UserService  implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		final Iterable<User> users = repository.getAll();
 
-		final Iterable<AppUser> users = repository.getAll();
 
-		for (AppUser appUser : users) {
+		for (User appUser : users) {
 			if (appUser.getUsername().equals(username)) {
 				List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-						.commaSeparatedStringToAuthorityList("ROLE_" + appUser.getRole());
-				return new User(appUser.getUsername(), appUser.getPassword(), grantedAuthorities);
+						.commaSeparatedStringToAuthorityList("ROLE_" + appUser.getRoles());
+				
+				System.out.println("ROLE=========================="+appUser.getRoles()
+				+"\n"+grantedAuthorities);
+				return new org.springframework.security.core.userdetails.User(appUser.getUsername(), appUser.getPassword(), grantedAuthorities);
 			}
 		}
-		throw new UsernameNotFoundException("Username: " + username + " not found");
+		throw new UsernameNotFoundException("Username: " + username + " not found");  
 	}
-	
-	public AppUser getByUsername(String username) {
-		return repository.getByUsername(username);
-	}
-	
+
 }

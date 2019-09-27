@@ -2,7 +2,6 @@ package com.example.demo.dao;
 
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 import org.hibernate.Session;
 

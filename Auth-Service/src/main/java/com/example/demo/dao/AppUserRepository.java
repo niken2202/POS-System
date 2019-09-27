@@ -5,25 +5,19 @@ import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.model.AppUser;
+import com.example.demo.model.User;
 
 @Repository
-public class AppUserRepository extends RepositoryBase<AppUser> {
+public class AppUserRepository extends RepositoryBase<User> {
 
 	public AppUserRepository() {
-		super(AppUser.class);
+		super(User.class);
 	}
-//	public Iterable<AppUser> getall() {
-//
-//		Session currentSession = entityManager.unwrap(Session.class);
-//		Iterable<AppUser> lists = (Iterable<AppUser>) currentSession.createQuery("from AppUser",AppUser.class).getResultList();
-//		return lists;
-//	};
 	
-	public AppUser getByUsername(String username) {
+	public User getByUsername(String username) {
 		Query query = entityManager.createQuery("SELECT e FROM  e user-identity e.username = ?1");
 	      query.setParameter(1, username);
-	      AppUser resultList =(AppUser) query.getSingleResult();
+	      User resultList =(User) query.getSingleResult();
 	    return resultList;
 	}
 	
